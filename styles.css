@@ -30,7 +30,7 @@ body {
     align-items: flex-start;
     min-height: 100vh;
     padding: 24px 12px;
-    background-color: #f0f0f0;
+    background-color: #FFC907;
     font-family: Arial, sans-serif;
 }
 
@@ -40,6 +40,12 @@ body {
     align-items: center;
     gap: 20px;
     width: min(800px, 100%);
+}
+
+.brand-logo {
+    display: block;
+    width: min(250px, 70vw);
+    height: auto;
 }
 
 .score-panel {
