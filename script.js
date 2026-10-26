@@ -23,9 +23,10 @@ function startGame() {
     document.getElementById("time").textContent = timeRemaining;
 
     if (timeRemaining === 0) {
+      gameRunning = false;
       clearInterval(gameTimer);
       clearInterval(dropMaker);
-      gameRunning = false;
+      document.getElementById("game-container").replaceChildren();
     }
   }, 1000);
 }
@@ -41,6 +42,8 @@ function resetGame() {
 }
 
 function createDrop() {
+  if (!gameRunning) return;
+
   // Create a new div element that will be our water drop
   const drop = document.createElement("div");
   drop.className = "water-drop";
