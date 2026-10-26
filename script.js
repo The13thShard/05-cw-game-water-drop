@@ -1,18 +1,43 @@
 // Variables to control game state
 let gameRunning = false; // Keeps track of whether game is active or not
 let dropMaker; // Will store our timer that creates drops regularly
+let gameTimer;
+let timeRemaining = 30;
 
 // Wait for button click to start the game
 document.getElementById("start-btn").addEventListener("click", startGame);
+document.getElementById("reset-btn").addEventListener("click", resetGame);
 
 function startGame() {
   // Prevent multiple games from running at once
   if (gameRunning) return;
 
   gameRunning = true;
+  timeRemaining = 30;
+  document.getElementById("time").textContent = timeRemaining;
 
   // Create new drops every second (1000 milliseconds)
   dropMaker = setInterval(createDrop, 1000);
+  gameTimer = setInterval(() => {
+    timeRemaining -= 1;
+    document.getElementById("time").textContent = timeRemaining;
+
+    if (timeRemaining === 0) {
+      clearInterval(gameTimer);
+      clearInterval(dropMaker);
+      gameRunning = false;
+    }
+  }, 1000);
+}
+
+function resetGame() {
+  clearInterval(gameTimer);
+  clearInterval(dropMaker);
+  gameRunning = false;
+  timeRemaining = 30;
+  document.getElementById("time").textContent = timeRemaining;
+  document.getElementById("score").textContent = "0";
+  document.getElementById("game-container").replaceChildren();
 }
 
 function createDrop() {
@@ -26,17 +51,29 @@ function createDrop() {
   const size = initialSize * sizeMultiplier;
   drop.style.width = drop.style.height = `${size}px`;
 
-  // Position the drop randomly across the game width
-  // Subtract 60 pixels to keep drops fully inside the container
-  const gameWidth = document.getElementById("game-container").offsetWidth;
-  const xPosition = Math.random() * (gameWidth - 60);
+  // Position the drop randomly while keeping it inside the game container
+  const gameWidth = document.getElementById("game-container").clientWidth;
+  const xPosition = Math.random() * Math.max(0, gameWidth - size);
   drop.style.left = xPosition + "px";
 
   // Make drops fall for 4 seconds
   drop.style.animationDuration = "4s";
 
   // Add the new drop to the game screen
-  document.getElementById("game-container").appendChild(drop);
+  const gameContainer = document.getElementById("game-container");
+  gameContainer.appendChild(drop);
+
+  drop.addEventListener("click", () => {
+    if (!gameRunning) return;
+
+    const scoreElement = document.getElementById("score");
+    scoreElement.textContent = Number(scoreElement.textContent) + 1;
+    drop.remove();
+
+    gameContainer.classList.remove("grid-flash");
+    void gameContainer.offsetWidth;
+    gameContainer.classList.add("grid-flash");
+  });
 
   // Remove drops that reach the bottom (weren't clicked)
   drop.addEventListener("animationend", () => {
