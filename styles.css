@@ -24,6 +24,10 @@ Fonts:
     box-sizing: border-box;
 }
 
+html {
+    background-color: #FFC907;
+}
+
 body {
     display: flex;
     justify-content: center;
