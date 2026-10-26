@@ -59,8 +59,8 @@ function createDrop() {
   const xPosition = Math.random() * Math.max(0, gameWidth - size);
   drop.style.left = xPosition + "px";
 
-  // Make drops fall for 4 seconds
-  drop.style.animationDuration = "4s";
+  // Make drops fall 2.25 times faster than the original 4-second duration
+  drop.style.animationDuration = `${4 / 2.25}s`;
 
   // Add the new drop to the game screen
   const gameContainer = document.getElementById("game-container");
